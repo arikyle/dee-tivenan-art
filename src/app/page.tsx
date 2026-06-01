@@ -14,7 +14,7 @@ export default function Home() {
 
   return (
     <SiteLayout>
-      <div className="max-w-[900px] mx-auto">
+      <div className="max-w-[1100px] w-full mx-auto">
         <HeroPainting work={heroWork} />
 
         <FeaturedGrid

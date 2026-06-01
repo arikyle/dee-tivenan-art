@@ -15,7 +15,7 @@ export function FeaturedGrid({
   href: string;
 }) {
   return (
-    <section className="mb-32">
+    <section className="mb-16 md:mb-20 last:mb-0">
       <ScrollReveal>
         <div className="flex items-baseline justify-between mb-8">
           <h2 className="font-[family-name:var(--font-heading)] text-[15px] font-semibold text-[var(--color-foreground)] tracking-[0.02em]">
@@ -29,7 +29,7 @@ export function FeaturedGrid({
           </Link>
         </div>
       </ScrollReveal>
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-5 md:gap-8">
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-3 sm:gap-5 md:gap-8">
         {works.slice(0, 6).map((work, i) => (
           <ScrollReveal key={work.src} delay={i * 80}>
             <Link href={href} className="group block">
@@ -42,7 +42,7 @@ export function FeaturedGrid({
                   sizes="(max-width: 768px) 50vw, 33vw"
                 />
               </div>
-              <p className="text-[11px] text-[var(--color-nav)] group-hover:text-[var(--color-muted)] transition-colors">
+              <p className="text-[12px] md:text-[11px] text-[var(--color-nav)] group-hover:text-[var(--color-muted)] transition-colors">
                 <em>{work.alt}</em>
               </p>
             </Link>

@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useState, useCallback, useEffect } from "react";
+import { useSwipe } from "@/hooks/useSwipe";
 import type { Artwork } from "@/lib/data";
 
 export function Gallery({ works, title }: { works: Artwork[]; title: string }) {
@@ -17,27 +18,45 @@ export function Gallery({ works, title }: { works: Artwork[]; title: string }) {
     setImageKey((k) => k + 1);
   }, []);
 
+  const goNext = useCallback(() => {
+    if (selectedIndex < works.length - 1) goTo(selectedIndex + 1);
+  }, [selectedIndex, works.length, goTo]);
+
+  const goPrev = useCallback(() => {
+    if (selectedIndex > 0) goTo(selectedIndex - 1);
+  }, [selectedIndex, goTo]);
+
+  const mainSwipe = useSwipe(goNext, goPrev);
+  const lightboxSwipe = useSwipe(goNext, goPrev);
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape" && lightbox) {
         setLightbox(false);
         return;
       }
-      if (e.key === "ArrowRight" && selectedIndex < works.length - 1) {
-        goTo(selectedIndex + 1);
-      } else if (e.key === "ArrowLeft" && selectedIndex > 0) {
-        goTo(selectedIndex - 1);
-      }
+      if (e.key === "ArrowRight") goNext();
+      else if (e.key === "ArrowLeft") goPrev();
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [selectedIndex, works.length, goTo, lightbox]);
+  }, [goNext, goPrev, lightbox]);
+
+  useEffect(() => {
+    if (lightbox) {
+      document.body.style.overflow = "hidden";
+      return () => { document.body.style.overflow = ""; };
+    }
+  }, [lightbox]);
 
   return (
     <>
       <div className="w-full max-w-[720px] mx-auto">
-        {/* Main image — click opens lightbox */}
-        <div className="relative mb-5">
+        {/* Main image — swipeable, click opens lightbox */}
+        <div
+          className="relative mb-5"
+          {...mainSwipe}
+        >
           <button
             type="button"
             onClick={() => setLightbox(true)}
@@ -62,56 +81,56 @@ export function Gallery({ works, title }: { works: Artwork[]; title: string }) {
 
         {/* Caption */}
         <div className="mb-5">
-          <p className="text-[12px] text-[var(--color-muted)]">
+          <p className="text-[13px] md:text-[12px] text-[var(--color-muted)]">
             <strong><em>{current.alt}</em></strong>
           </p>
           {current.medium && (
-            <p className="text-[12px] text-[var(--color-muted)]">{current.medium}</p>
+            <p className="text-[13px] md:text-[12px] text-[var(--color-muted)]">{current.medium}</p>
           )}
           {current.dimensions && (
-            <p className="text-[12px] text-[var(--color-muted)]">{current.dimensions}</p>
+            <p className="text-[13px] md:text-[12px] text-[var(--color-muted)]">{current.dimensions}</p>
           )}
           {!current.medium && !current.dimensions && (
-            <p className="text-[12px] text-[var(--color-muted)]">{title}</p>
+            <p className="text-[13px] md:text-[12px] text-[var(--color-muted)]">{title}</p>
           )}
         </div>
 
-        {/* Navigation controls */}
-        <div className="flex items-center gap-4 text-[12px] text-[var(--color-nav)]">
+        {/* Navigation controls — touch-friendly */}
+        <div className="flex items-center gap-2 text-[13px] md:text-[12px] text-[var(--color-nav)]">
           <button
             type="button"
-            onClick={() => goTo(Math.max(0, selectedIndex - 1))}
+            onClick={goPrev}
             disabled={selectedIndex === 0}
-            className="transition-colors hover:text-[var(--color-foreground)] disabled:opacity-25 disabled:cursor-default"
+            className="min-h-[44px] min-w-[44px] flex items-center justify-center transition-colors hover:text-[var(--color-foreground)] disabled:opacity-25 disabled:cursor-default"
           >
             prev
           </button>
           <span className="text-[var(--color-border)]">/</span>
           <button
             type="button"
-            onClick={() => goTo(Math.min(works.length - 1, selectedIndex + 1))}
+            onClick={goNext}
             disabled={selectedIndex === works.length - 1}
-            className="transition-colors hover:text-[var(--color-foreground)] disabled:opacity-25 disabled:cursor-default"
+            className="min-h-[44px] min-w-[44px] flex items-center justify-center transition-colors hover:text-[var(--color-foreground)] disabled:opacity-25 disabled:cursor-default"
           >
             next
           </button>
-          <span className="mx-2 text-[11px] text-[var(--color-nav)] tabular-nums opacity-60">
+          <span className="mx-1 text-[11px] text-[var(--color-nav)] tabular-nums opacity-60">
             {selectedIndex + 1} / {works.length}
           </span>
           <span className="ml-auto">
             <button
               type="button"
               onClick={() => setShowThumbnails(!showThumbnails)}
-              className="transition-colors hover:text-[var(--color-foreground)]"
+              className="min-h-[44px] px-2 flex items-center transition-colors hover:text-[var(--color-foreground)]"
             >
               {showThumbnails ? "hide thumbnails" : "show thumbnails"}
             </button>
           </span>
         </div>
 
-        {/* Thumbnail grid — stays visible, clicking updates main image only */}
+        {/* Thumbnail grid */}
         {showThumbnails && (
-          <div className="mt-8 grid grid-cols-4 gap-3 sm:grid-cols-5 md:grid-cols-6">
+          <div className="mt-8 grid grid-cols-3 gap-3 sm:grid-cols-4 md:grid-cols-6">
             {works.map((work, i) => (
               <button
                 type="button"
@@ -137,48 +156,54 @@ export function Gallery({ works, title }: { works: Artwork[]; title: string }) {
         )}
       </div>
 
-      {/* Lightbox overlay — white background like a museum */}
+      {/* Lightbox overlay — swipeable, mobile-optimized */}
       {lightbox && (
         <div
-          className="fixed inset-0 z-[100] flex items-center justify-center bg-white cursor-zoom-out"
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-white cursor-zoom-out safe-top safe-bottom"
           onClick={() => setLightbox(false)}
           role="dialog"
           aria-label="Fullscreen image view"
+          {...lightboxSwipe}
         >
+          {/* Close — top-right, touch-friendly */}
           <button
             type="button"
             onClick={() => setLightbox(false)}
-            className="absolute top-8 right-8 text-[var(--color-nav)] hover:text-[var(--color-foreground)] text-[13px] transition-colors z-10"
+            className="absolute top-4 right-4 md:top-8 md:right-8 min-h-[44px] min-w-[44px] flex items-center justify-center text-[var(--color-nav)] hover:text-[var(--color-foreground)] text-[13px] transition-colors z-10"
             aria-label="Close"
           >
             Close
           </button>
 
-          {/* Prev/Next in lightbox */}
+          {/* Prev — left side, full-height touch zone on mobile */}
           {selectedIndex > 0 && (
             <button
               type="button"
-              onClick={(e) => { e.stopPropagation(); goTo(selectedIndex - 1); }}
-              className="absolute left-8 top-1/2 -translate-y-1/2 text-[var(--color-nav)] hover:text-[var(--color-foreground)] text-[13px] transition-colors z-10"
+              onClick={(e) => { e.stopPropagation(); goPrev(); }}
+              className="absolute left-0 top-0 bottom-0 w-16 md:w-auto md:left-8 md:top-1/2 md:-translate-y-1/2 md:bottom-auto flex items-center justify-center text-[var(--color-nav)] hover:text-[var(--color-foreground)] text-[13px] transition-colors z-10"
               aria-label="Previous"
             >
-              prev
+              <span className="hidden md:inline">prev</span>
+              <span className="md:hidden text-[18px]">‹</span>
             </button>
           )}
+
+          {/* Next — right side, full-height touch zone on mobile */}
           {selectedIndex < works.length - 1 && (
             <button
               type="button"
-              onClick={(e) => { e.stopPropagation(); goTo(selectedIndex + 1); }}
-              className="absolute right-8 top-1/2 -translate-y-1/2 text-[var(--color-nav)] hover:text-[var(--color-foreground)] text-[13px] transition-colors z-10"
+              onClick={(e) => { e.stopPropagation(); goNext(); }}
+              className="absolute right-0 top-0 bottom-0 w-16 md:w-auto md:right-8 md:top-1/2 md:-translate-y-1/2 md:bottom-auto flex items-center justify-center text-[var(--color-nav)] hover:text-[var(--color-foreground)] text-[13px] transition-colors z-10"
               aria-label="Next"
             >
-              next
+              <span className="hidden md:inline">next</span>
+              <span className="md:hidden text-[18px]">›</span>
             </button>
           )}
 
           <div
             key={imageKey}
-            className="relative w-[80vw] h-[80vh] max-w-[1100px] crossfade-enter painting-shadow"
+            className="relative w-[90vw] h-[70vh] md:w-[80vw] md:h-[80vh] max-w-[1100px] crossfade-enter painting-shadow"
             onClick={(e) => e.stopPropagation()}
           >
             <Image
@@ -186,13 +211,13 @@ export function Gallery({ works, title }: { works: Artwork[]; title: string }) {
               alt={current.alt}
               fill
               className="object-contain cursor-default"
-              sizes="80vw"
+              sizes="90vw"
               priority
             />
           </div>
 
           {/* Caption in lightbox */}
-          <div className="absolute bottom-8 left-1/2 -translate-x-1/2 text-center">
+          <div className="absolute bottom-4 md:bottom-8 left-1/2 -translate-x-1/2 text-center px-4 w-full max-w-[600px]">
             <p className="text-[12px] text-[var(--color-muted)]">
               <em>{current.alt}</em>
               {current.medium && <span className="mx-2 text-[var(--color-nav)]">·</span>}

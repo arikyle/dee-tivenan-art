@@ -33,17 +33,17 @@ export function SiteLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex min-h-screen flex-col md:flex-row">
       {/* Mobile header */}
-      <header className="sticky top-0 z-50 flex items-center justify-between bg-white/95 backdrop-blur-sm px-6 py-4 md:hidden">
+      <header className="sticky top-0 z-50 flex items-center justify-between bg-white/95 backdrop-blur-sm px-5 py-3 safe-top md:hidden">
         <Link
           href="/"
-          className="font-[family-name:var(--font-heading)] text-[18px] font-bold tracking-[0.02em] text-[var(--color-foreground)]"
+          className="font-[family-name:var(--font-heading)] text-[18px] font-bold tracking-[0.02em] text-[var(--color-foreground)] min-h-[44px] flex items-center"
         >
           DEE TIVENAN
         </Link>
         <button
           type="button"
           onClick={() => setMenuOpen(!menuOpen)}
-          className="text-[var(--color-nav)] text-[13px] tracking-wide uppercase transition-colors hover:text-[var(--color-foreground)]"
+          className="min-h-[44px] min-w-[44px] flex items-center justify-center text-[var(--color-nav)] text-[13px] tracking-wide uppercase transition-colors hover:text-[var(--color-foreground)]"
           aria-label="Toggle menu"
         >
           {menuOpen ? "Close" : "Menu"}
@@ -52,14 +52,14 @@ export function SiteLayout({ children }: { children: React.ReactNode }) {
 
       {/* Mobile menu overlay */}
       {menuOpen && (
-        <nav className="fixed inset-0 top-[57px] z-40 bg-white/98 backdrop-blur-sm px-8 py-10 md:hidden">
-          <ul className="space-y-4">
+        <nav className="fixed inset-0 top-[50px] z-40 bg-white/98 backdrop-blur-sm px-8 py-10 md:hidden overflow-y-auto">
+          <ul className="space-y-1">
             {navLinks.map((link) => (
               <li key={link.href}>
                 <Link
                   href={link.href}
                   onClick={() => setMenuOpen(false)}
-                  className={`block text-[15px] transition-colors ${
+                  className={`block text-[16px] min-h-[44px] flex items-center transition-colors ${
                     pathname === link.href
                       ? "text-[var(--color-foreground)] font-medium"
                       : "text-[var(--color-nav)] hover:text-[var(--color-nav-hover)]"
@@ -71,13 +71,13 @@ export function SiteLayout({ children }: { children: React.ReactNode }) {
             ))}
           </ul>
           <div className="my-5 w-10 h-px bg-[var(--color-border)]" />
-          <ul className="space-y-4">
+          <ul className="space-y-1">
             {secondaryLinks.map((link) => (
               <li key={link.href}>
                 <Link
                   href={link.href}
                   onClick={() => setMenuOpen(false)}
-                  className={`block text-[15px] transition-colors ${
+                  className={`block text-[16px] min-h-[44px] flex items-center transition-colors ${
                     pathname === link.href
                       ? "text-[var(--color-foreground)] font-medium"
                       : "text-[var(--color-nav)] hover:text-[var(--color-nav-hover)]"
@@ -93,7 +93,7 @@ export function SiteLayout({ children }: { children: React.ReactNode }) {
               href="https://www.instagram.com/deetivenanartist/"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 text-[13px] text-[var(--color-nav)] hover:text-[var(--color-foreground)] transition-colors"
+              className="inline-flex items-center gap-2 text-[14px] min-h-[44px] text-[var(--color-nav)] hover:text-[var(--color-foreground)] transition-colors"
             >
               <InstagramIcon />
               <span>Instagram</span>
@@ -168,17 +168,17 @@ export function SiteLayout({ children }: { children: React.ReactNode }) {
       </aside>
 
       {/* Main content */}
-      <main className="flex-1 flex justify-center px-8 py-10 md:py-16 md:px-16 lg:px-24">
+      <main className="flex-1 flex justify-center px-5 py-8 md:py-16 md:px-16 lg:px-24">
         {children}
       </main>
 
       {/* Mobile footer */}
-      <footer className="md:hidden border-t border-[var(--color-border)] px-6 py-8 text-center">
+      <footer className="md:hidden border-t border-[var(--color-border)] px-6 py-8 text-center safe-bottom">
         <a
           href="https://www.instagram.com/deetivenanartist/"
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center gap-2 text-[12px] text-[var(--color-nav)] hover:text-[var(--color-foreground)] transition-colors"
+          className="inline-flex items-center gap-2 text-[12px] min-h-[44px] text-[var(--color-nav)] hover:text-[var(--color-foreground)] transition-colors"
         >
           <InstagramIcon />
           <span>@deetivenanartist</span>

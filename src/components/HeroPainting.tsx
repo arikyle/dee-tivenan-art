@@ -9,11 +9,11 @@ export function HeroPainting({ work }: { work: Artwork }) {
   const { ref, offset } = useParallax(0.08);
 
   return (
-    <section className="mb-24" ref={ref}>
+    <section className="mb-14 md:mb-20" ref={ref}>
       <ScrollReveal>
         <div className="relative overflow-hidden">
           <div
-            className="relative w-full max-w-[640px] mx-auto aspect-square overflow-hidden"
+            className="relative w-full max-w-[860px] mx-auto aspect-[4/3] overflow-hidden"
             style={{ transform: `translateY(${offset}px)` }}
           >
             <Image
@@ -21,14 +21,14 @@ export function HeroPainting({ work }: { work: Artwork }) {
               alt={work.alt}
               fill
               className="object-cover"
-              sizes="(max-width: 768px) 100vw, 640px"
+              sizes="(max-width: 768px) 100vw, 860px"
               priority
             />
           </div>
         </div>
       </ScrollReveal>
       <ScrollReveal delay={200}>
-        <div className="mt-6 max-w-[640px] mx-auto">
+        <div className="mt-6 max-w-[860px] mx-auto">
           <p className="text-[12px] text-[var(--color-muted)]">
             <strong><em>{work.alt}</em></strong>
           </p>

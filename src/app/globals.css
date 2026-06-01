@@ -35,11 +35,19 @@ body {
   background-color: var(--color-background);
   color: var(--color-muted);
   font-family: var(--font-sans);
-  font-size: 12px;
+  font-size: 14px;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+@media (min-width: 768px) {
+  body {
+    font-size: 12px;
+  }
 }
 
 h1, h2, h3 {
@@ -113,28 +121,28 @@ img {
 }
 
 
-/* ─── Scrollbar ─── */
+/* ─── Scrollbar — hidden but scrollable ─── */
+html {
+  scrollbar-width: none;
+}
+
 ::-webkit-scrollbar {
-  width: 5px;
-}
-
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #d4d4d4;
-  border-radius: 3px;
-  transition: background 0.2s;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #a3a3a3;
+  display: none;
 }
 
 /* ─── Gallery cursor ─── */
 img {
   cursor: default;
+}
+
+/* ─── Safe area insets for notched devices ─── */
+@supports (padding: env(safe-area-inset-bottom)) {
+  .safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  .safe-top {
+    padding-top: env(safe-area-inset-top);
+  }
 }
 
 /* ─── Accessibility: reduced motion ─── */
