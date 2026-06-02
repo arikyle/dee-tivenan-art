@@ -217,6 +217,7 @@ export function Gallery({ works, title }: { works: Artwork[]; title: string }) {
                   src={work.src}
                   alt={work.alt}
                   fill
+                  loading="eager"
                   className="object-cover transition-transform duration-700 ease-[var(--ease-out-quint)] hover:scale-[1.05]"
                   sizes="120px"
                   placeholder="blur"
