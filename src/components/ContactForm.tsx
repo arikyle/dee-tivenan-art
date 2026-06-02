@@ -1,11 +1,142 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { galleries } from "@/lib/data";
 
-const allWorks = galleries.flatMap((g) =>
-  g.works.map((w) => ({ label: w.alt, category: g.title }))
-);
+function ChevronIcon({ open }: { open: boolean }) {
+  return (
+    <svg
+      width="12"
+      height="12"
+      viewBox="0 0 12 12"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={`transition-transform duration-300 ${open ? "rotate-180" : ""}`}
+    >
+      <path d="M3 4.5L6 7.5L9 4.5" />
+    </svg>
+  );
+}
+
+function PaintingSelect({
+  value,
+  onChange,
+}: {
+  value: string;
+  onChange: (val: string) => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const listRef = useRef<HTMLDivElement>(null);
+
+  const close = useCallback(() => setOpen(false), []);
+
+  useEffect(() => {
+    if (!open) return;
+    const handleClick = (e: MouseEvent) => {
+      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+        close();
+      }
+    };
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") close();
+    };
+    document.addEventListener("mousedown", handleClick);
+    document.addEventListener("keydown", handleKey);
+    return () => {
+      document.removeEventListener("mousedown", handleClick);
+      document.removeEventListener("keydown", handleKey);
+    };
+  }, [open, close]);
+
+  useEffect(() => {
+    if (open && listRef.current && value) {
+      const active = listRef.current.querySelector("[data-active]");
+      if (active) active.scrollIntoView({ block: "nearest" });
+    }
+  }, [open, value]);
+
+  const displayLabel = value || "General inquiry";
+
+  return (
+    <div ref={containerRef} className="relative">
+      <button
+        type="button"
+        onClick={() => setOpen(!open)}
+        className={`w-full flex items-center justify-between px-3 py-2.5 text-[13px] border bg-transparent transition-colors duration-300 text-left ${
+          open
+            ? "border-[var(--color-foreground)]"
+            : "border-[var(--color-border)] hover:border-[var(--color-nav)]"
+        } ${value ? "text-[var(--color-foreground)]" : "text-[var(--color-nav)]"}`}
+        aria-haspopup="listbox"
+        aria-expanded={open}
+      >
+        <span className="truncate pr-2">{displayLabel}</span>
+        <ChevronIcon open={open} />
+      </button>
+
+      {open && (
+        <div
+          ref={listRef}
+          role="listbox"
+          aria-label="Select a painting"
+          data-lenis-prevent
+          className="absolute z-50 top-[calc(100%+4px)] left-0 right-0 max-h-[320px] overflow-y-auto overscroll-contain bg-white border border-[var(--color-border)] shadow-[0_8px_32px_rgba(0,0,0,0.08)] [scrollbar-width:thin]"
+        >
+          <button
+            type="button"
+            role="option"
+            aria-selected={!value}
+            onClick={() => { onChange(""); close(); }}
+            className={`w-full text-left px-3 py-2.5 text-[13px] transition-colors duration-200 ${
+              !value
+                ? "text-[var(--color-foreground)] bg-[#f8f8f8]"
+                : "text-[var(--color-muted)] hover:bg-[#fafafa]"
+            }`}
+          >
+            General inquiry
+          </button>
+
+          {galleries.map((g) => (
+            <div key={g.slug}>
+              <div className="px-3 pt-3 pb-1 text-[10px] text-[var(--color-nav)] tracking-[0.12em] uppercase select-none">
+                {g.title}
+              </div>
+              {g.works.map((w) => {
+                const selected = value === w.alt;
+                return (
+                  <button
+                    type="button"
+                    role="option"
+                    aria-selected={selected}
+                    key={w.src}
+                    data-active={selected || undefined}
+                    onClick={() => { onChange(w.alt); close(); }}
+                    className={`w-full text-left px-3 py-2 text-[13px] transition-colors duration-200 ${
+                      selected
+                        ? "text-[var(--color-foreground)] bg-[#f8f8f8]"
+                        : "text-[var(--color-muted)] hover:bg-[#fafafa] hover:text-[var(--color-foreground)]"
+                    }`}
+                  >
+                    <em>{w.alt}</em>
+                    {w.dimensions && (
+                      <span className="ml-2 text-[11px] text-[var(--color-nav)]">
+                        {w.dimensions}
+                      </span>
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
 
 export function ContactForm({ preselectedWork }: { preselectedWork?: string }) {
   const [name, setName] = useState("");
@@ -102,26 +233,10 @@ export function ContactForm({ preselectedWork }: { preselectedWork?: string }) {
       </div>
 
       <div>
-        <label htmlFor="contact-painting" className="block text-[11px] text-[var(--color-nav)] tracking-wide uppercase mb-1.5">
+        <label className="block text-[11px] text-[var(--color-nav)] tracking-wide uppercase mb-1.5">
           Painting of Interest <span className="normal-case">(optional)</span>
         </label>
-        <select
-          id="contact-painting"
-          value={painting}
-          onChange={(e) => setPainting(e.target.value)}
-          className="w-full px-3 py-2.5 text-[13px] border border-[var(--color-border)] bg-transparent text-[var(--color-foreground)] focus:outline-none focus:border-[var(--color-foreground)] transition-colors duration-300 appearance-none"
-        >
-          <option value="">General inquiry</option>
-          {galleries.map((g) => (
-            <optgroup key={g.slug} label={g.title}>
-              {g.works.map((w) => (
-                <option key={w.src} value={w.alt}>
-                  {w.alt}
-                </option>
-              ))}
-            </optgroup>
-          ))}
-        </select>
+        <PaintingSelect value={painting} onChange={setPainting} />
       </div>
 
       <div>
