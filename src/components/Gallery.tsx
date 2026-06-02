@@ -54,6 +54,9 @@ export function Gallery({ works, title }: { works: Artwork[]; title: string }) {
     setSelectedIndex(index);
     setImageKey((k) => k + 1);
     setShowSwipeHint(false);
+    const url = new URL(window.location.href);
+    url.searchParams.set("start", String(index));
+    window.history.replaceState({}, "", url.toString());
   }, []);
 
   const goNext = useCallback(() => {
