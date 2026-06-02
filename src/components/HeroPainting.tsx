@@ -12,7 +12,7 @@ export function HeroPainting({ work }: { work: Artwork }) {
   const parallaxRef = useParallax(0.06);
 
   return (
-    <section className="mb-14 md:mb-20">
+    <section className="mb-16 md:mb-28">
       <ScrollReveal variant="painting">
         <div className="relative overflow-hidden" ref={parallaxRef}>
           <div className="relative w-full max-w-[860px] mx-auto aspect-[4/3] overflow-hidden">
@@ -30,7 +30,7 @@ export function HeroPainting({ work }: { work: Artwork }) {
         </div>
       </ScrollReveal>
       <ScrollReveal delay={300}>
-        <div className="mt-6 max-w-[860px] mx-auto">
+        <div className="mt-8 max-w-[860px] mx-auto">
           <p className="text-[12px] text-[var(--color-muted)]">
             <strong><em>{work.alt}</em></strong>
           </p>

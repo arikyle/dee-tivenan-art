@@ -24,14 +24,14 @@ export function CategoryCards({ galleries }: { galleries: GalleryCategory[] }) {
           Explore the Collection
         </h2>
       </ScrollReveal>
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 md:gap-8">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 md:gap-10">
         {ordered.map((gallery, i) => {
           const imgIndex = representativeIndex[gallery.slug] ?? 0;
           const work = gallery.works[imgIndex];
           return (
             <ScrollReveal key={gallery.slug} delay={i * 150} variant="painting">
               <Link href={`/${gallery.slug}`} className="group block">
-                <div className="relative aspect-[4/5] overflow-hidden mb-4 painting-hover">
+                <div className="relative aspect-[4/5] overflow-hidden mb-5 painting-hover">
                   <Image
                     src={work.src}
                     alt={`${gallery.title} — ${work.alt}`}

@@ -3,7 +3,13 @@ import { Suspense } from "react";
 import { Gallery } from "@/components/Gallery";
 import { galleries } from "@/lib/data";
 
-export const metadata: Metadata = { title: "DEE TIVENAN — Large Works" };
+export const metadata: Metadata = {
+  title: "Large Works",
+  openGraph: {
+    title: "Dee Tivenan — Large Works",
+    images: [{ url: "/images/large-works/03-traveling.jpg" }],
+  },
+};
 
 export default function LargeWorks() {
   const gallery = galleries[2];

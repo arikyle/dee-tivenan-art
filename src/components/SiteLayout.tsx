@@ -173,7 +173,7 @@ export function SiteLayout({ children }: { children: React.ReactNode }) {
       </aside>
 
       {/* Main content */}
-      <main className="flex-1 flex justify-center px-5 py-8 md:py-16 md:px-16 lg:px-24">
+      <main className="flex-1 flex justify-center px-5 py-10 md:py-20 md:px-16 lg:px-28">
         {children}
       </main>
 
