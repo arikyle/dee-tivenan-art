@@ -4,8 +4,6 @@ import { Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { ScrollReveal } from "@/components/ScrollReveal";
 import { ContactForm } from "@/components/ContactForm";
-import { NewsletterSignup } from "@/components/NewsletterSignup";
-
 function ContactContent() {
   const searchParams = useSearchParams();
   const painting = searchParams.get("painting") || undefined;
@@ -24,15 +22,6 @@ function ContactContent() {
       </ScrollReveal>
       <ScrollReveal delay={160}>
         <ContactForm preselectedWork={painting} />
-      </ScrollReveal>
-
-      <ScrollReveal delay={240}>
-        <div className="hidden md:block mt-16 pt-12 border-t border-[var(--color-border)] max-w-[280px]">
-          <p className="text-[13px] text-[var(--color-muted)] mb-4">
-            Stay up to date with new work and exhibitions.
-          </p>
-          <NewsletterSignup />
-        </div>
       </ScrollReveal>
     </div>
   );
