@@ -53,7 +53,7 @@ export function SiteLayout({ children }: { children: React.ReactNode }) {
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
-    <div className="flex min-h-screen flex-col md:flex-row">
+    <div className="min-h-screen">
       {/* Mobile header */}
       <header className="sticky top-0 z-50 flex items-center justify-between bg-white/95 backdrop-blur-sm px-5 py-3 safe-top md:hidden">
         <Link
@@ -124,8 +124,8 @@ export function SiteLayout({ children }: { children: React.ReactNode }) {
         </nav>
       )}
 
-      {/* Desktop sidebar */}
-      <aside className="hidden md:flex md:flex-col md:w-[240px] lg:w-[260px] md:shrink-0 md:sticky md:top-0 md:h-screen md:py-12 md:px-10 lg:px-14">
+      {/* Desktop sidebar — fixed so it stays outside scroll flow */}
+      <aside className="hidden md:flex md:flex-col md:fixed md:top-0 md:left-0 md:w-[240px] lg:w-[260px] md:h-screen md:py-12 md:px-10 lg:px-14 md:z-40">
         <div className="flex flex-col h-full">
           <Link
             href="/"
@@ -172,8 +172,8 @@ export function SiteLayout({ children }: { children: React.ReactNode }) {
         </div>
       </aside>
 
-      {/* Main content */}
-      <main className="flex-1 flex justify-center px-5 py-10 md:py-20 md:px-16 lg:px-28">
+      {/* Main content — offset by sidebar width on desktop */}
+      <main className="px-5 py-10 md:py-20 md:pl-[280px] lg:pl-[310px] md:pr-12 lg:pr-20">
         {children}
       </main>
 

@@ -12,7 +12,7 @@ export default function Home() {
   const heroWork = galleries[2].works[7];
 
   return (
-    <div className="max-w-[1100px] w-full mx-auto">
+    <div className="w-full max-w-[1400px]">
       <HeroPainting work={heroWork} />
       <CategoryCards galleries={galleries} />
     </div>
