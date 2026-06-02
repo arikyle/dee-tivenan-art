@@ -71,7 +71,6 @@ export const galleries: GalleryCategory[] = [
 ];
 
 export const navLinks = [
-  { href: "/", label: "Selected Works" },
   { href: "/small-works", label: "Small Works" },
   { href: "/medium-works", label: "Medium Works" },
   { href: "/large-works", label: "Large Works" },

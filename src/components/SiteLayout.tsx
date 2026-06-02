@@ -6,7 +6,6 @@ import { useState } from "react";
 import { NewsletterSignup } from "./NewsletterSignup";
 
 const navLinks = [
-  { href: "/", label: "Selected Works" },
   { href: "/small-works", label: "Small Works" },
   { href: "/medium-works", label: "Medium Works" },
   { href: "/large-works", label: "Large Works" },
