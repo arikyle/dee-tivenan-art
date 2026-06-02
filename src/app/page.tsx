@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { SiteLayout } from "@/components/SiteLayout";
 import { FeaturedGrid } from "@/components/FeaturedGrid";
 import { HeroPainting } from "@/components/HeroPainting";
 import { galleries } from "@/lib/data";
@@ -10,29 +9,27 @@ export const metadata: Metadata = {
 };
 
 export default function Home() {
-  const heroWork = galleries[2].works[7]; // "New Hope" — large work
+  const heroWork = galleries[2].works[7];
 
   return (
-    <SiteLayout>
-      <div className="max-w-[1100px] w-full mx-auto">
-        <HeroPainting work={heroWork} />
+    <div className="max-w-[1100px] w-full mx-auto">
+      <HeroPainting work={heroWork} />
 
-        <FeaturedGrid
-          works={galleries[2].works}
-          title="Large Works"
-          href="/large-works"
-        />
-        <FeaturedGrid
-          works={galleries[1].works}
-          title="Medium Works"
-          href="/medium-works"
-        />
-        <FeaturedGrid
-          works={galleries[0].works}
-          title="Small Works"
-          href="/small-works"
-        />
-      </div>
-    </SiteLayout>
+      <FeaturedGrid
+        works={galleries[2].works}
+        title="Large Works"
+        href="/large-works"
+      />
+      <FeaturedGrid
+        works={galleries[1].works}
+        title="Medium Works"
+        href="/medium-works"
+      />
+      <FeaturedGrid
+        works={galleries[0].works}
+        title="Small Works"
+        href="/small-works"
+      />
+    </div>
   );
 }

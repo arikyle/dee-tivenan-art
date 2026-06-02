@@ -80,6 +80,7 @@ export const navLinks = [
 export const secondaryLinks = [
   { href: "/cv", label: "CV" },
   { href: "/about", label: "About" },
+  { href: "/contact", label: "Contact" },
 ];
 
 export interface ResumeYear {

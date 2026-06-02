@@ -5,17 +5,17 @@ import { useParallax } from "@/hooks/useParallax";
 import { ScrollReveal } from "./ScrollReveal";
 import type { Artwork } from "@/lib/data";
 
+const BLUR_PLACEHOLDER =
+  "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiBmaWxsPSIjZjBmMGYwIi8+PC9zdmc+";
+
 export function HeroPainting({ work }: { work: Artwork }) {
-  const { ref, offset } = useParallax(0.08);
+  const parallaxRef = useParallax(0.06);
 
   return (
-    <section className="mb-14 md:mb-20" ref={ref}>
-      <ScrollReveal>
-        <div className="relative overflow-hidden">
-          <div
-            className="relative w-full max-w-[860px] mx-auto aspect-[4/3] overflow-hidden"
-            style={{ transform: `translateY(${offset}px)` }}
-          >
+    <section className="mb-14 md:mb-20">
+      <ScrollReveal variant="painting">
+        <div className="relative overflow-hidden" ref={parallaxRef}>
+          <div className="relative w-full max-w-[860px] mx-auto aspect-[4/3] overflow-hidden">
             <Image
               src={work.src}
               alt={work.alt}
@@ -23,11 +23,13 @@ export function HeroPainting({ work }: { work: Artwork }) {
               className="object-cover"
               sizes="(max-width: 768px) 100vw, 860px"
               priority
+              placeholder="blur"
+              blurDataURL={BLUR_PLACEHOLDER}
             />
           </div>
         </div>
       </ScrollReveal>
-      <ScrollReveal delay={200}>
+      <ScrollReveal delay={300}>
         <div className="mt-6 max-w-[860px] mx-auto">
           <p className="text-[12px] text-[var(--color-muted)]">
             <strong><em>{work.alt}</em></strong>
@@ -38,6 +40,14 @@ export function HeroPainting({ work }: { work: Artwork }) {
           {work.dimensions && (
             <p className="text-[12px] text-[var(--color-muted)]">{work.dimensions}</p>
           )}
+          <p className="mt-2">
+            <a
+              href={`/contact?painting=${encodeURIComponent(work.alt)}`}
+              className="text-[12px] text-[var(--color-nav)] hover:text-[var(--color-foreground)] transition-colors duration-500 tracking-wide nav-underline inline-block"
+            >
+              Inquire
+            </a>
+          </p>
         </div>
       </ScrollReveal>
     </section>

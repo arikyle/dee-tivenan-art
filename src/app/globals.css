@@ -12,7 +12,6 @@
   --color-border: #e5e5e5;
 }
 
-/* Easing tokens — natural, refined motion */
 :root {
   --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
   --ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
@@ -46,7 +45,7 @@ body {
 
 @media (min-width: 768px) {
   body {
-    font-size: 12px;
+    font-size: 14px;
   }
 }
 
@@ -74,9 +73,9 @@ img {
 /* ─── Scroll-triggered fade-in ─── */
 .fade-in-up {
   opacity: 0;
-  transform: translateY(20px);
-  transition: opacity 0.7s var(--ease-out-quart),
-              transform 0.7s var(--ease-out-quart);
+  transform: translateY(24px);
+  transition: opacity 0.9s var(--ease-out-quint),
+              transform 0.9s var(--ease-out-quint);
 }
 
 .fade-in-up.visible {
@@ -84,35 +83,176 @@ img {
   transform: translateY(0);
 }
 
+/* ─── Image reveal — clip-path curtain ─── */
+.reveal-clip {
+  clip-path: inset(0 0 100% 0);
+  transition: clip-path 1.4s var(--ease-out-expo);
+}
+
+.reveal-clip.visible {
+  clip-path: inset(0 0 0 0);
+}
+
+/* ─── Combined reveal: fade + clip ─── */
+.reveal-painting {
+  opacity: 0;
+  clip-path: inset(8% 0 8% 0);
+  transition: opacity 1.2s var(--ease-out-quint),
+              clip-path 1.4s var(--ease-out-expo);
+}
+
+.reveal-painting.visible {
+  opacity: 1;
+  clip-path: inset(0 0 0 0);
+}
+
+/* ─── Painting hover — museum-grade ─── */
+.painting-hover {
+  overflow: hidden;
+}
+
+.painting-hover img {
+  transition: transform 0.9s var(--ease-out-quint);
+}
+
+.painting-hover:hover img {
+  transform: scale(1.03);
+}
+
+.painting-hover::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0);
+  transition: box-shadow 0.9s var(--ease-out-quint);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.painting-hover:hover::after {
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.04);
+}
+
 /* ─── Page load choreography ─── */
 .page-enter {
-  animation: pageEnter 0.6s var(--ease-out-quint) forwards;
+  animation: pageEnter 0.8s var(--ease-out-quint) forwards;
 }
 
 @keyframes pageEnter {
-  from { opacity: 0; transform: translateY(12px); }
+  from { opacity: 0; transform: translateY(16px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* Sidebar stagger entrance */
+/* ─── Sidebar stagger entrance ─── */
 .sidebar-enter {
-  animation: sidebarEnter 0.5s var(--ease-out-quart) forwards;
+  animation: sidebarEnter 0.6s var(--ease-out-quart) forwards;
   opacity: 0;
 }
 
 @keyframes sidebarEnter {
-  from { opacity: 0; transform: translateX(-8px); }
+  from { opacity: 0; transform: translateX(-10px); }
   to { opacity: 1; transform: translateX(0); }
 }
 
-/* ─── Image crossfade ─── */
+/* ─── Nav link underline slide ─── */
+.nav-underline {
+  position: relative;
+}
+
+.nav-underline::after {
+  content: "";
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: var(--color-foreground);
+  transition: width 0.5s var(--ease-out-quart);
+}
+
+.nav-underline:hover::after,
+.nav-underline:focus-visible::after {
+  width: 100%;
+}
+
+/* Active nav indicator */
+.nav-active {
+  position: relative;
+}
+
+.nav-active::before {
+  content: "";
+  position: absolute;
+  left: -10px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--color-foreground);
+}
+
+/* ─── Mobile menu animation ─── */
+.menu-enter {
+  animation: menuFadeIn 0.35s var(--ease-out-quart) forwards;
+}
+
+@keyframes menuFadeIn {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.menu-item-enter {
+  opacity: 0;
+  animation: menuItemIn 0.4s var(--ease-out-quart) forwards;
+}
+
+@keyframes menuItemIn {
+  from { opacity: 0; transform: translateX(-6px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+/* ─── Image crossfade — cinematic ─── */
 .crossfade-enter {
-  animation: crossfadeIn 0.5s var(--ease-out-quint) forwards;
+  animation: crossfadeIn 0.8s var(--ease-out-quint) forwards;
 }
 
 @keyframes crossfadeIn {
-  from { opacity: 0; transform: scale(0.985); }
+  from { opacity: 0; transform: scale(0.98); }
   to { opacity: 1; transform: scale(1); }
+}
+
+/* ─── Lightbox — cinematic entrance ─── */
+.lightbox-enter {
+  animation: lightboxIn 0.6s var(--ease-out-expo) forwards;
+}
+
+@keyframes lightboxIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.lightbox-image-enter {
+  animation: lightboxImageIn 0.7s var(--ease-out-quint) 0.1s forwards;
+  opacity: 0;
+}
+
+@keyframes lightboxImageIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* ─── Caption slide-up ─── */
+.caption-enter {
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.6s var(--ease-out-quart) 0.15s,
+              transform 0.6s var(--ease-out-quart) 0.15s;
+}
+
+.group:hover .caption-enter {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 /* ─── Parallax ─── */
@@ -120,19 +260,23 @@ img {
   will-change: transform;
 }
 
-
-/* ─── Scrollbar — hidden but scrollable ─── */
+/* ─── Scrollbar — thin and unobtrusive ─── */
 html {
-  scrollbar-width: none;
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border) transparent;
 }
 
 ::-webkit-scrollbar {
-  display: none;
+  width: 6px;
 }
 
-/* ─── Gallery cursor ─── */
-img {
-  cursor: default;
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 3px;
 }
 
 /* ─── Safe area insets for notched devices ─── */
@@ -156,9 +300,31 @@ img {
     scroll-behavior: auto !important;
   }
 
-  .fade-in-up {
+  .fade-in-up,
+  .reveal-clip,
+  .reveal-painting {
     opacity: 1;
     transform: none;
+    clip-path: none;
   }
 
+  .menu-enter,
+  .menu-item-enter {
+    opacity: 1;
+    animation: none;
+  }
+}
+
+/* ─── Focus visible — keyboard accessibility ─── */
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--color-foreground);
+  outline-offset: 2px;
+}
+
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  border-color: var(--color-foreground);
+  outline: none;
 }

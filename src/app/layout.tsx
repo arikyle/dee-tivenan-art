@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Montserrat, Jost } from "next/font/google";
+import { SiteLayout } from "@/components/SiteLayout";
 import "./globals.css";
 
 const montserrat = Montserrat({
@@ -33,7 +34,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${montserrat.variable} ${jost.variable} h-full`}>
-      <body className="min-h-full">{children}</body>
+      <body className="min-h-full">
+        <SiteLayout>{children}</SiteLayout>
+      </body>
     </html>
   );
 }

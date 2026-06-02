@@ -1,33 +1,59 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 
-export function useParallax(speed = 0.15) {
+export function useParallax(speed = 0.15, axis: "y" | "x" = "y") {
   const ref = useRef<HTMLDivElement>(null);
-  const [offset, setOffset] = useState(0);
 
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
-    let ticking = false;
-    const handleScroll = () => {
-      if (ticking) return;
-      ticking = true;
-      requestAnimationFrame(() => {
-        const rect = el.getBoundingClientRect();
-        const windowHeight = window.innerHeight;
-        const elementCenter = rect.top + rect.height / 2;
-        const distanceFromCenter = elementCenter - windowHeight / 2;
-        setOffset(distanceFromCenter * speed);
-        ticking = false;
-      });
+    el.style.willChange = "transform";
+
+    let target = 0;
+    let current = 0;
+    let raf = 0;
+    let running = false;
+
+    const LERP = 0.055;
+    const THRESHOLD = 0.05;
+
+    const tick = () => {
+      const diff = target - current;
+      if (Math.abs(diff) < THRESHOLD) {
+        current = target;
+        running = false;
+      } else {
+        current += diff * LERP;
+        raf = requestAnimationFrame(tick);
+      }
+      el.style.transform =
+        axis === "y"
+          ? `translate3d(0, ${current}px, 0)`
+          : `translate3d(${current}px, 0, 0)`;
     };
 
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    handleScroll();
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [speed]);
+    const onScroll = () => {
+      const rect = el.getBoundingClientRect();
+      const center = rect.top + rect.height / 2;
+      target = (center - window.innerHeight / 2) * speed;
+      if (!running) {
+        running = true;
+        raf = requestAnimationFrame(tick);
+      }
+    };
 
-  return { ref, offset };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      cancelAnimationFrame(raf);
+      el.style.willChange = "";
+    };
+  }, [speed, axis]);
+
+  return ref;
 }
