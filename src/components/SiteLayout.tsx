@@ -173,7 +173,7 @@ export function SiteLayout({ children }: { children: React.ReactNode }) {
       </aside>
 
       {/* Main content — offset by sidebar width on desktop */}
-      <main className="px-5 py-10 md:py-20 md:pl-[280px] lg:pl-[310px] md:pr-12 lg:pr-20">
+      <main className="px-5 py-10 md:py-20 md:pl-[280px] lg:pl-[310px] md:pr-12 lg:pr-20 overflow-x-hidden">
         {children}
       </main>
 

@@ -15,7 +15,7 @@ export function HeroPainting({ work }: { work: Artwork }) {
     <section className="mb-16 md:mb-28">
       <ScrollReveal variant="painting">
         <div className="relative overflow-hidden" ref={parallaxRef}>
-          <div className="relative w-full max-w-[1100px] mx-auto aspect-[4/3] overflow-hidden">
+          <div className="relative w-full aspect-[4/3] overflow-hidden">
             <Image
               src={work.src}
               alt={work.alt}
@@ -30,7 +30,7 @@ export function HeroPainting({ work }: { work: Artwork }) {
         </div>
       </ScrollReveal>
       <ScrollReveal delay={300}>
-        <div className="mt-8 max-w-[1100px] mx-auto">
+        <div className="mt-8">
           <p className="text-[12px] text-[var(--color-muted)]">
             <strong><em>{work.alt}</em></strong>
           </p>

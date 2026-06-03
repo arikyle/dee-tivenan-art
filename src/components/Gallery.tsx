@@ -104,7 +104,7 @@ export function Gallery({ works, title }: { works: Artwork[]; title: string }) {
 
   return (
     <>
-      <div className="w-full max-w-[960px] mx-auto">
+      <div className="w-full">
         {/* Main image — swipeable, click opens lightbox */}
         <div
           className="relative mb-5"
